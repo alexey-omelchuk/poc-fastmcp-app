@@ -1,0 +1,11 @@
+__pycache__
+.venv
+venv
+.pytest_cache
+data/*.db
+.git
+docs/
+chat/
+tests/
+.env
+var_entorno*.txt

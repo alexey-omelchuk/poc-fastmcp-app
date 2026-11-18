@@ -1,0 +1,45 @@
+# Arranque:  docker compose up -d                     → chat Chainlit en http://localhost:8001 (+ servidor MCP en :8000)
+# Visor:     docker compose --profile visor up -d     → además, visor de FastMCP (fastmcp dev apps) en http://localhost:8080
+# Parar:     docker compose --profile visor down
+
+services:
+  mcp:
+    build: .
+    image: vekai-ot-mcp:latest
+    pull_policy: build
+    container_name: vekai-ot-mcp
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data            # SQLite en ./data/ordenes.db
+    restart: unless-stopped
+
+  chat:
+    build: ./chat
+    image: vekai-ot-chat:latest
+    pull_policy: build
+    container_name: vekai-ot-chat
+    ports:
+      - "8001:8001"
+    environment:
+      MCP_URL: http://mcp:8000/mcp
+    env_file:
+      # API key de Groq (GROQ_API_KEY=...) fuera del repo, en la carpeta padre.
+      - path: ../var_entorno_groq.txt
+        required: false
+      - path: .env
+        required: false
+    depends_on:
+      - mcp
+    restart: unless-stopped
+
+  visor:
+    image: vekai-ot-mcp:latest
+    container_name: vekai-ot-visor
+    profiles: ["visor"]
+    depends_on: [mcp]
+    command: ["fastmcp", "dev", "apps", "server.py:mcp", "--host", "0.0.0.0", "--no-reload"]
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data

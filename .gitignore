@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+data/*.db
+data/*.db-*
+.env
+*.env
+var_entorno*.txt
+.files/
+chat/.files/
+.chainlit/translations/
