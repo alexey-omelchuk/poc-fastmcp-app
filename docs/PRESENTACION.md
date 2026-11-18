@@ -39,7 +39,7 @@ Cuatro ideas clave:
 
 ## Guion de la demo
 
-Antes de la reunión: `docker compose --profile visor up -d` y deja abiertas http://localhost:8001 (chat Chainlit) y una terminal en la carpeta.
+Antes de la reunión: `docker compose --profile visor up -d` y deja abiertas http://localhost:8001 (chat Chainlit), el visor (URL con token de `docker compose logs visor | grep "dev UI"`) y una terminal en la carpeta.
 
 1. **OT precargada (≈1 min).** En Chainlit, pulsa el botón «OT precargada (P-101)» o escribe: *«Crea una orden para la bomba P-101. Pierde agua por el cierre mecánico y es urgente»*.
    - Señala que P-101, la descripción y la prioridad Alta vienen ya rellenos.
@@ -50,7 +50,7 @@ Antes de la reunión: `docker compose --profile visor up -d` y deja abiertas htt
    - El activo sale **Pendiente**. Pulsa Crear → el error dice qué falta y lo escrito se conserva.
    - Elige **M-301** y crea → OT-DEMO-0002.
 3. **La fila en SQLite (≈30 s).** En la terminal: `docker compose exec mcp python scripts/ver_db.py` (o `python scripts/ver_db.py` en local). Se ven 2 filas, con estado **Abierta**.
-4. **(Opcional) Visor oficial.** http://localhost:8080 → `abrir_formulario_ot` → mismo formulario. Es lo que pide el correo con `fastmcp dev apps`.
+4. **(Opcional) Visor oficial.** Abre la URL con token de `docker compose logs visor | grep "dev UI"` → `abrir_formulario_ot` → mismo formulario. Es lo que pide el correo con `fastmcp dev apps`.
 
 Si algo falla en directo, tienes el vídeo de respaldo en `docs/demo.mp4` (2 min, enseña todo el flujo del correo).
 

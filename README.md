@@ -13,15 +13,16 @@ y la OT se guarda en **SQLite**.
 
 ```bash
 docker compose up -d                    # chat Chainlit → http://localhost:8001  (+ servidor MCP en :8000)
-docker compose --profile visor up -d    # además, visor de FastMCP → http://localhost:8080
-docker compose logs visor               # URL de arranque del visor
+docker compose --profile visor up -d    # además, visor de FastMCP (puerto 8080)
+docker compose logs visor | grep "dev UI"   # ⚠ abre ESA URL (http://127.0.0.1:8080/?token=...)
 docker compose exec mcp python scripts/ver_db.py   # filas guardadas en SQLite
 docker compose --profile visor down     # parar todo
 ```
 
 La **API key de Groq** (LLM del chat) se lee de `../var_entorno_groq.txt` (`GROQ_API_KEY=...`), es
-decir, de la carpeta padre del proyecto, o de un `.env` en la raíz. Nunca se sube al repo. Si el
-modelo por defecto no está disponible, añade `GROQ_MODEL=<modelo>` al `.env`.
+decir, de la carpeta padre del proyecto, o de un `.env` en la raíz. Nunca se sube al repo. El chat
+**elige solo un modelo disponible** en tu cuenta de Groq (lo verás en `docker compose logs chat`).
+Para forzar uno concreto, añade `GROQ_MODEL=<modelo>` al `.env`.
 
 ## Qué tiene que salir (flujo del correo)
 
@@ -35,7 +36,10 @@ modelo por defecto no está disponible, añade `GROQ_MODEL=<modelo>` al `.env`.
 | 6 | Eliges **M-301** → **Crear orden** | **«Orden OT-DEMO-0002 creada · Estado: Abierta»** |
 | 7 | `docker compose exec mcp python scripts/ver_db.py` (o pregúntale al agente *«¿Qué órdenes hay guardadas?»*) | Las filas en SQLite, con estado **Abierta** |
 
-**En el visor de FastMCP** (http://localhost:8080 o `fastmcp dev apps server.py:mcp`): elige
+**En el visor de FastMCP**: se abre **solo con la URL con token** que imprime al arrancar
+(`docker compose logs visor | grep "dev UI"`). Con `http://localhost:8080` a secas sale
+«No dev session». El token cambia en cada arranque. En local, `fastmcp dev apps server.py:mcp`
+abre el navegador solo. Dentro del visor, elige
 `abrir_formulario_ot`, rellena los argumentos (lo que haría el agente) y pulsa *Launch*. Sale el
 mismo formulario.
 
